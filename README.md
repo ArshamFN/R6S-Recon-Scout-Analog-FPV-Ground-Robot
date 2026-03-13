@@ -135,7 +135,7 @@ Project is in the hardware acquisition phase. All electronics have been purchase
 ## Documentation
 
 - [Bill of Materials](docs/hardware/bill-of-materials.md) — Complete parts list with suppliers and costs
-- [Build Log](docs/build-log.md) — Session-by-session assembly and testing journal
+- [Build Log](docs/logs/build-logs.md) — Session-by-session assembly and testing journal
 
 ## Author
 
