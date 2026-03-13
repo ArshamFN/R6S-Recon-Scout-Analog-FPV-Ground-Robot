@@ -18,6 +18,9 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 - Document the full hardware integration process — wiring, ESC flashing, TX configuration
 - Build a fun, capable RC robot as a counterpart to more software-heavy portfolio projects
 
+![Refrence 1](images/Refrence-1.jpeg)
+![Refrence 2](images/Refrence-2.jpg)
+
 ## Hardware Platform
 
 ### Core Components
@@ -35,8 +38,8 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 | Component | Specification |
 |-----------|---------------|
 | **Form Factor** | Dumbbell — two wheel hubs, central barrel, rear stabilizer stem |
-| **Barrel Diameter** | ~40mm |
-| **Total Width** | ~160mm |
+| **Barrel Diameter** | TBD |
+| **Total Width** | TBD |
 | **Drivetrain** | Differential steering, 2WD brushless |
 | **Motor KV** | 4300KV |
 | **Battery** | 2S LiPo, 7.4V nominal, 800mAh, 50C, JST connector |
