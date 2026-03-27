@@ -33,6 +33,7 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 - **FPV Goggles:** 5.8GHz receiver goggles (operator-owned)
 - **Power:** 2× 2S 800mAh 50C LiPo in parallel (1600mAh total, operator-owned)
 - **UBEC:** UBEC-3A 5V Mini BEC 2–6S DC-DC Converter (operator-owned)
+- **RC Light Bar:** 32PCS LED Roof Lamp, 100mm, 5V–8.4V — 3 modes: On, Breathing, Strobe
 
 ### Technical Specifications
 
@@ -59,6 +60,7 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 | ESCs | 2S LiPo main lead (parallel pack) |
 | Receiver | 2S LiPo main lead — direct connection enables accurate voltage telemetry |
 | AKK BA3 VTX + Camera | UBEC 5V regulated output (within BA3 operating range: 3.3–5.5V) |
+| RC Light Bar | FS-iA6B receiver — 5V channel output (within light bar operating range: 5V–8.4V) |
 
 ## Chassis Design
 
@@ -106,7 +108,7 @@ All inter-piece joints use **M3×6×5 heat set inserts**: 4.1mm hole diameter, 7
 
 **Prototyping:**
 - ✅ First wheel prototype printed (PLA — geometry check)
-- ✅ Body structure defined — four-piece design with heat-set insert joints
+- ✅ Body structure defined — four-piece design with heat set insert joints
 
 **Pending:**
 - ⏳ Barrel body design finalized and printed
@@ -125,8 +127,8 @@ All inter-piece joints use **M3×6×5 heat set inserts**: 4.1mm hole diameter, 7
 
 ## Documentation
 
-- [Bill of Materials](docs/hardware/bill-of-materials.md) — Complete parts list with suppliers and costs
-- [Build Log](docs/logs/build-logs.md) — Session-by-session assembly and testing journal
+- [Bill of Materials](docs/bill-of-materials.md) — Complete parts list with suppliers and costs
+- [Build Log](docs/logs/0000-build-logs.md) — Session-by-session assembly and testing journal
 
 ## Author
 
