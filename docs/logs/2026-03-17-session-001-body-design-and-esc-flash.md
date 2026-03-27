@@ -35,7 +35,7 @@ once the ESCs arrived, it became clear the original barrel internal volume estim
 was based on incorrect ESC dimensions — the HSKRC OPTIO 20A ESCs are significantly
 smaller than anticipated, leaving the body oversized.
 
-![body v1](../images/session-001/session-001-body-v1.png)
+![body v1](../../images/session-001/session-001-body-v1.png)
 
 The body was redesigned around the actual ESC footprint. The redesigned barrel is
 more compact and better matches the target dumbbell silhouette.
@@ -107,7 +107,7 @@ A wiring diagram was produced for the repository this session. The diagram refle
 the corrected ESC flashing procedure using BLHeliSuite and the PB3PB4 firmware —
 not the BLHeli Configurator method originally documented in Session 000.
 
-![ESC to Arduino Wiring Diagram](../images/session-001/session-001-esc-programming-wiring-diagram.png)
+![ESC to Arduino Wiring Diagram](../../images/session-001/session-001-esc-programming-wiring-diagram.png)
 
 ---
 
