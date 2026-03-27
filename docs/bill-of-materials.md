@@ -1,6 +1,6 @@
 # Bill of Materials
-**Last Updated:** March 15, 2026  
-**Total Cost:** ~$371 CAD
+**Last Updated:** March 27, 2026  
+**Total Cost:** ~$392 CAD
 
 ---
 
@@ -10,10 +10,11 @@
 |------|-------|-----|------------|-------|----------|--------|
 | RC Receiver | FlySky FS-iA6B 6CH AFHDS 2A | 1 | $29.99 | $29.99 | Amazon.ca | ✅ Received |
 | FPV Camera + VTX | AKK BA3 5.8G 40CH AIO 200mW 600TVL | 1 | $35.99 | $35.99 | Amazon.ca | ✅ Received |
-| ESCs | BLHeli-S 20A 2–4S | 2 | $19.98 | $39.96 | Amazon.ca | ✅ Received |
+| ESCs | HSKRC OPTIO 20A BLHeli_S 16.7 (A-H-25) | 2 | $19.98 | $39.96 | Amazon.ca | ✅ Received |
+| RC Light Bar | 32PCS LED Roof Lamp, 100mm, 5V–8.4V | 1 | $19.22 | $19.22 | Amazon.ca | ✅ Received |
 
-**Subtotal:** $105.94 CAD (before tax)  
-**Subtotal with tax:** ~$120 CAD
+**Subtotal:** $125.16 CAD (before tax)  
+**Subtotal with tax:** ~$141 CAD
 
 ---
 
@@ -35,14 +36,15 @@
 ---
 
 ## TOTAL PROJECT COST (purchased + pre-owned):  
-**~$371 CAD (not including filaments)**
+**~$392 CAD (not including filaments)**
 
 ---
 
 ## Notes
-- ESCs flashed to BLHeli-S bidirectional mode — one set to `Bidirectional`, one to `Bidirectional Reversed`
+- ESCs flashed to BLHeli_S bidirectional mode via BLHeliSuite — one set to `Bidirectional`, one to `Bidirectional Reversed`
 - Receiver powered directly from 2S LiPo main lead — within FS-iA6B operating range (4.0–8.4V), direct connection enables accurate voltage telemetry
-- AKK BA3 powered from UBEC 5V regulated output — within 3.3–5.5V operating range
-- Battery packs wired in parallel — voltage stays at 7.4V, capacity doubles to 1600mAh
+- AKK BA3 powered from UBEC 5V regulated output — within BA3 operating range (3.3–5.5V)
+- Battery packs wired in parallel — voltage stays at 7.4V nominal, capacity doubles to 1600mAh
 - JST connector on battery packs — verify ESC power lead connector before wiring
-- 1600mAh at 50C provides 80A max continuous — well within combined ESC limit
+- RC light bar powered directly from FS-iA6B receiver — 3 modes: On, Breathing, Strobe
+- Two 800mAh 50C packs in parallel deliver 80A max continuous — well within combined ESC rating
