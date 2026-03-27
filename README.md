@@ -81,7 +81,7 @@ The barrel assembly consists of four 3D-printed pieces:
 | **Battery Cover** | Removable panel providing frequent-access battery compartment |
 | **Rear Stem** | Separate piece attaching above the Battery Cover — passive stabilizer leg |
 
-All inter-piece joints use **M3×6×5 heat set inserts**: 4.1mm hole diameter, 7mm hole depth, minimum 1mm wall thickness around each insert.
+All inter-piece joints use **M3×6×5 brass heat set inserts**: 4.2mm hole diameter, 7.2mm hole depth, 9.35mm outer wall diameter.
 
 ## Current Status
 
@@ -99,22 +99,31 @@ All inter-piece joints use **M3×6×5 heat set inserts**: 4.1mm hole diameter, 7
 - ✅ All hardware received
 
 **Electronics:**
-- ✅ ESCs flashed to bidirectional mode via BLHeliSuite (ESC1: Bidirectional, ESC2: Bidirectional Reversed)
+- ✅ ESC programming approach confirmed — BLHeliSuite + Arduino Uno as 4-way interface
+- ✅ ESCs flashed to bidirectional mode (ESC1: Bidirectional, ESC2: Bidirectional Reversed)
 - ✅ FS-iA6B receiver bound to FS-i6X transmitter
 - ✅ Elevon mix configured on FS-i6X — 100% travel, Rate 100, Expo 70
 - ✅ ESC PWM calibration complete (Min 1000µs, Center 1500µs, Max 2000µs)
 - ✅ ESC startup tuning complete — Low RPM Power Protect off, Startup Power high, Demag Compensation low, Motor Timing high
-- ✅ Full wiring completed outside body
+- ✅ Full wiring completed
 
-**Prototyping:**
+**Mechanical:**
+- ✅ Body v1 printed in PLA — motor fitment confirmed
+- ✅ Body redesigned around actual ESC dimensions
+- ✅ Heat set insert cavity specification established (4.2mm dia, 7.2mm depth, 9.35mm outer wall)
+- ✅ Body, body cap, and battery cover printed in PETG
+- ✅ Wheels and rear stem printed in TPU
+- ✅ Full assembly completed
+
+**Testing:**
 - ✅ First wheel prototype printed (PLA — geometry check)
-- ✅ Body structure defined — four-piece design with heat set insert joints
+- ✅ First drive test completed — motor torque failure identified and resolved
+- ✅ Second drive test completed — robot moves under power
 
 **Pending:**
-- ⏳ Barrel body design finalized and printed
-- ⏳ Full mechanical assembly
-- ⏳ Wheel material testing (PLA baseline complete — TPU and others pending)
-- ⏳ First drive test
+- ⏳ Wheel redesign — smaller diameter, wider contact patch, better traction geometry
+- ⏳ Motor response inconsistency investigation
+- ⏳ Wheel material testing (TPU baseline complete — further iterations pending)
 - ⏳ Requirements verification (drop, runtime, splash resistance)
 
 ### Known Design Considerations
