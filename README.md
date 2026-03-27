@@ -13,7 +13,7 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 
 **Why This Project:**
 - Apply drone electronics knowledge to a ground robotics platform
-- Achieve low-latency analog FPV video on a custom-built recon drone, driven by real-life law enforcement applications and inspired by the R6S Recon Scout
+- Achieve low-latency analog FPV video on a custom-built recon robot, driven by real-life law enforcement applications and inspired by the R6S Recon Scout
 - Design and 3D print a compact dumbbell chassis from scratch
 - Document the full hardware integration process — wiring, ESC flashing, TX configuration
 - Build a fun, capable RC robot as a counterpart to more software-heavy portfolio projects
@@ -26,7 +26,7 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 ### Core Components
 - **Chassis:** Custom 3D-printed dumbbell form factor
 - **Drive Motors:** 2× 2212 920KV Brushless Motor (2S rated, operator-owned)
-- **ESCs:** 2× BLHeli-S 20A ESC (2–4S, flashed to bidirectional mode)
+- **ESCs:** 2× HSKRC OPTIO 20A BLHeli_S 16.7 (A-H-25) (flashed to bidirectional mode)
 - **Receiver:** FlySky FS-iA6B (6CH, AFHDS 2A, iBUS/PPM)
 - **Transmitter:** FlySky FS-i6X (10CH, AFHDS 2A — operator-owned)
 - **Camera + VTX:** AKK BA3 5.8GHz 40CH AIO, 200mW, 600TVL
@@ -41,12 +41,11 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 | **Form Factor** | Dumbbell — two wheel hubs, central barrel, rear stabilizer stem |
 | **Barrel Diameter** | ~40mm |
 | **Total Width** | ~150mm + (wheel thickness × 2) |
-| **Drivetrain** | Differential steering, 2WD brushless |
+| **Drivetrain** | Differential steering, 2WD brushless direct-drive |
 | **Motor KV** | 920KV |
-| **Motor Torque** | ~0.208 N·m per motor at 20A |
 | **Battery** | 2× 2S 800mAh 50C in parallel — 7.4V nominal, 1600mAh, JST |
 | **Est. Runtime** | ~10–12 min at normal driving loads |
-| **ESC Protocol** | DSHOT / BLHeli-S, bidirectional mode enabled |
+| **ESC Signal Protocol** | PWM (BLHeli_S bidirectional mode) |
 | **RC Protocol** | AFHDS 2A (2.4GHz) |
 | **Video Protocol** | Analog 5.8GHz, 40 channels, up to 200mW |
 | **Video Latency** | <30ms (analog) |
@@ -59,7 +58,7 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 |-----------|-------------|
 | ESCs | 2S LiPo main lead (parallel pack) |
 | Receiver | 2S LiPo main lead — direct connection enables accurate voltage telemetry |
-| AKK BA3 VTX + Camera | UBEC 5V regulated output (within 3.3–5.5V operating range) |
+| AKK BA3 VTX + Camera | UBEC 5V regulated output (within BA3 operating range: 3.3–5.5V) |
 
 ## Chassis Design
 
@@ -69,43 +68,65 @@ The robot matches the R6S Recon Scout's dumbbell silhouette:
 - **Barrel:** Central cylinder containing the ESCs, receiver, UBEC, and all wiring. The AKK BA3 camera faces forward through the front face of the barrel.
 - **Rear stem:** Passive ground-contact leg that resists motor reaction torque — without it, the body would rotate in the opposite direction of the wheels rather than the wheels driving the robot forward.
 
+### Body Structure
+
+The barrel assembly consists of four 3D-printed pieces:
+
+| Piece | Function |
+|-------|----------|
+| **Main Body** | Primary electronics housing — ESCs, receiver, UBEC, all wiring |
+| **Main Body Cap** | Forward-facing face of the barrel — mounts AKK BA3 camera and antennas |
+| **Battery Cover** | Removable panel providing frequent-access battery compartment |
+| **Rear Stem** | Separate piece attaching above the Battery Cover — passive stabilizer leg |
+
+All inter-piece joints use **M3×6×5 heat set inserts**: 4.1mm hole diameter, 7mm hole depth, minimum 1mm wall thickness around each insert.
+
 ## Current Status
 
-**Last Updated:** March 15, 2026
+**Last Updated:** March 27, 2026
 
 ### Completed Milestones
 
 **Planning & Design:**
 - ✅ System architecture defined — pure analog FPV, no onboard computer
-- ✅ Motor and ESC selection finalized (2212 920KV + BLHeli-S bidirectional)
+- ✅ Motor and ESC selection finalized (2212 920KV + HSKRC OPTIO 20A BLHeli_S bidirectional)
 - ✅ Receiver selected (FS-iA6B, confirmed AFHDS 2A telemetry support)
 - ✅ Camera selected (AKK BA3 AIO — fits barrel form factor)
 - ✅ Chassis concept designed — dumbbell form factor matching R6S reference
 - ✅ Full BOM sourced and purchased
 - ✅ All hardware received
 
+**Electronics:**
+- ✅ ESCs flashed to bidirectional mode via BLHeliSuite (ESC1: Bidirectional, ESC2: Bidirectional Reversed)
+- ✅ FS-iA6B receiver bound to FS-i6X transmitter
+- ✅ Elevon mix configured on FS-i6X — 100% travel, Rate 100, Expo 70
+- ✅ ESC PWM calibration complete (Min 1000µs, Center 1500µs, Max 2000µs)
+- ✅ ESC startup tuning complete — Low RPM Power Protect off, Startup Power high, Demag Compensation low, Motor Timing high
+- ✅ Full wiring completed outside body
+
 **Prototyping:**
 - ✅ First wheel prototype printed (PLA — geometry check)
-- ✅ ESC bidirectional flashing
-- ✅ Transmitter binding and mixer configuration
+- ✅ Body structure defined — four-piece design with heat-set insert joints
 
 **Pending:**
-- ⏳ Barrel body design finalized around actual ESC dimensions
-- ⏳ Barrel body printed and assembled
+- ⏳ Barrel body design finalized and printed
 - ⏳ Full mechanical assembly
+- ⏳ Wheel material testing (PLA baseline complete — TPU and others pending)
 - ⏳ First drive test
+- ⏳ Requirements verification (drop, runtime, splash resistance)
 
 ### Known Design Considerations
 
 - **FS-iA6B antenna:** Must not be enclosed in a solid printed shell. Route antenna wire to exit through the barrel wall.
 - **Battery connector:** 2S packs use JST — verify ESC power lead connector before wiring.
-- **Motor direction:** One ESC set to `Bidirectional`, the other to `Bidirectional Reversed`. Getting this wrong results in one wheel driving backward — correct in BLHeli Configurator, not by swapping motor wires.
+- **Motor direction:** ESC1 set to `Bidirectional`, ESC2 to `Bidirectional Reversed`. Getting this wrong results in one wheel driving backward — correct in BLHeliSuite, not by swapping motor wires.
 - **VTX power level:** Drop to 25mW indoors to avoid multipath interference. 200mW for outdoor use.
+- **Variable speed limiter:** Left stick throttle axis reserved for a future speed limiter feature. The FS-i6X cannot implement this natively — a microcontroller between the receiver and ESCs would be required.
 
 ## Documentation
 
-- [Bill of Materials](docs/bill-of-materials.md) — Complete parts list with suppliers and costs
-- [Build Log](docs/logs/0000-build-logs.md) — Session-by-session assembly and testing journal
+- [Bill of Materials](docs/hardware/bill-of-materials.md) — Complete parts list with suppliers and costs
+- [Build Log](docs/logs/build-logs.md) — Session-by-session assembly and testing journal
 
 ## Author
 
