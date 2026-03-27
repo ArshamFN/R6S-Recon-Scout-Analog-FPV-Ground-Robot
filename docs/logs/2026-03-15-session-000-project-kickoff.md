@@ -55,18 +55,15 @@ design and testing decisions throughout the build:
 
 ### Drive System
 **2212 920KV Brushless Motors** were selected for their torque-to-size ratio and
-suitability for ground drive applications. At 920KV on 2S the motors produce
-approximately 0.208 N·m of torque per motor at 20A — sufficient to drive the robot
-reliably on any surface at the target weight. The lower KV rating also means a
-controllable top speed without requiring endpoint limiting on the transmitter from
-the outset. The motors are operator-owned, adding zero cost to the build.
+suitability for ground drive applications. The lower KV rating means a controllable
+top speed without requiring endpoint limiting on the transmitter from the outset.
+The motors are operator-owned, adding zero cost to the build.
 
-**2× BLHeli-S 20A ESCs** were selected for motor control. Standard drone ESCs
-are unidirectional by default. BLHeli-S firmware includes a bidirectional mode
-that is enabled via BLHeli Configurator — no firmware flash required, only a
-settings change. One ESC will be configured to `Bidirectional`, the other to
-`Bidirectional Reversed`, so that forward throttle drives both wheels in the
-correct direction without any additional wiring changes.
+**2× HSKRC OPTIO 20A BLHeli_S 16.7 (A-H-25) ESCs** were selected for motor
+control. Standard drone ESCs are unidirectional by default. BLHeli_S firmware
+includes a bidirectional mode enabled via BLHeliSuite. One ESC is configured to
+`Bidirectional`, the other to `Bidirectional Reversed`, so that forward throttle
+drives both wheels in the correct direction without any additional wiring changes.
 
 ### Control System
 **FlySky FS-iA6B** receiver selected to pair with the operator-owned FS-i6X
@@ -80,14 +77,14 @@ on the robot.
 **AKK BA3 5.8G 40CH AIO FPV Camera** selected to replace the originally
 considered AKK KC04. At 20×14mm and 4.7g, the BA3 is significantly more
 appropriate for the barrel form factor. Max output of 200mW is sufficient for
-the operating range of a ground robot. The BA3 operates on 3.3–5.5V and will
-be powered directly from the ESC BEC 5V rail — no voltage regulator required.
-The KC04 is shelved for a future long-range build.
+the operating range of a ground robot. The BA3 operates on 3.3–5.5V and is
+powered from the UBEC-3A 5V regulated output. The KC04 is shelved for a future
+long-range build.
 
 ### Power System
 Two 2S 800mAh 50C LiPo packs wired in parallel — 1600mAh total at 7.4V nominal.
-At 50C discharge rate the pack can deliver 40A continuously, which matches the
-combined ESC limit. Estimated runtime at normal driving loads is approximately
+Two 800mAh 50C packs in parallel deliver 80A max continuous, which is well within
+the combined ESC rating. Estimated runtime at normal driving loads is approximately
 10–12 minutes. A dedicated external battery pod with waterproof connector is
 planned to allow charging without disassembly.
 
@@ -101,7 +98,7 @@ hubs flanking a central barrel, with a passive rear stabilizer stem. All structu
 components will be 3D printed.
 
 ### Body Redesign — ESC Dimensions
-The BLHeli-S 20A ESCs arrived significantly smaller than anticipated. The original
+The BLHeli_S 20A ESCs arrived significantly smaller than anticipated. The original
 barrel internal volume estimate was based on larger ESC dimensions, leaving the
 barrel oversized. The body design was revised to reflect the actual ESC footprint,
 resulting in a more compact and accurate barrel diameter.
@@ -121,7 +118,7 @@ a first physical reference for sizing the barrel end cap.
 
 ## Next Steps
 
-- [ ] Flash both ESCs to bidirectional mode using BLHeli Configurator via Arduino Uno passthrough — `Bidirectional` on ESC 1, `Bidirectional Reversed` on ESC 2
+- [ ] Flash both ESCs to bidirectional mode via BLHeliSuite using Arduino Uno as 4-way interface — `Bidirectional` on ESC 1, `Bidirectional Reversed` on ESC 2
 - [ ] Bind FS-iA6B receiver to FS-i6X transmitter
 - [ ] Configure elevon mix on FS-i6X for differential steering
 - [ ] Finalize barrel body design around actual ESC dimensions
