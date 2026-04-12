@@ -48,9 +48,9 @@ The new design addresses both:
 Wheels reprinted in TPU and installed. Traction saw a clear improvement over the
 previous design.
 
-![Wheel v1 — 90mm original](../images/session-006/Wheel-V1.png)
+![Wheel v1 — 90mm original](../../images/session-006/Wheel-V1.png)
 Before: 90MM Wheel
-![Wheel v2 — 70mm redesign](../images/session-006/Wheel-V2.png)
+![Wheel v2 — 70mm redesign](../../images/session-006/Wheel-V2.png)
 After: 70MM Wheel
 
 ---
