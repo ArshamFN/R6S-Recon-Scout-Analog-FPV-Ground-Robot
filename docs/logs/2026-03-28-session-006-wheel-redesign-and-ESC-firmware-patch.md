@@ -26,7 +26,8 @@ positions).
    motor direction
 8. Two patched hex files produced and flashed via BLHeliSuite
 9. Post-flash startup power tuned — settled at value 11 (1.00)
-10. ESCs appeared to be running in sync on the bench; full drive test deferred
+10. Motors started at closer, but not identical, stick positions on the bench;
+    full drive test deferred
 
 ---
 
@@ -270,9 +271,9 @@ Final Startup Power: **11 (1.00)**
 
 ## ESC Sync Verification
 
-With both ESCs flashed and startup power tuned, the ESCs appeared to be running
-in sync on the bench. Full drive testing under load was deferred to the next
-available session.
+With both ESCs flashed and startup power tuned, the motors started at closer, but
+not identical, stick positions on the bench. Sync was not measured. Full drive
+testing under load was deferred to the next available session.
 
 ---
 

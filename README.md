@@ -10,7 +10,7 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 **ESC firmware patch** ([Session 006 log](docs/logs/2026-03-28-session-006-wheel-redesign-and-ESC-firmware-patch.md))
 - **Problem:** the two BLHeli_S ESCs engaged at different stick positions.
 - **Fix:** the settings bytes (throttle range, center, direction, startup power) were patched directly in the stock Intel HEX file, record checksums recalculated, and one file flashed per ESC.
-- **Result:** the ESCs appeared to run in sync on the bench; sync has not been measured yet.
+- **Result:** on the bench the motors started at closer, but not identical, stick positions; sync has not been measured yet.
 
 ## Project Overview
 
@@ -113,7 +113,7 @@ All inter-piece joints use **M3×6×5 brass heat set inserts**: 4.2mm hole diame
 - ✅ ESC PWM calibration complete (Min 1000µs, Center 1500µs, Max 2000µs)
 - ✅ ESC startup tuning complete — Low RPM Power Protect off, Startup Power high, Demag Compensation low, Motor Timing high
 - ✅ Full wiring completed
-- ✅ Motor response inconsistency addressed in Session 006: ESC firmware patched at the hex level, one file per ESC; ESCs appeared in sync on the bench (not yet measured)
+- ✅ Motor response inconsistency addressed in Session 006: ESC firmware patched at the hex level, one file per ESC; motors started at closer, but not identical, stick positions on the bench (not yet measured)
 - ✅ Startup Power retuned to 11 (1.00) after flashing (Session 006)
 
 **Mechanical:**

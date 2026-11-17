@@ -76,10 +76,10 @@ forward without a motor swap or any hardware change.
 ## ESC PWM Calibration — Incorrect PPM Values
 
 After the torque fix, one motor was running faster than the other and both motors
-showed spin at zero throttle. Investigation revealed that the ESCs had learned
-incorrect PPM throttle values during a prior calibration attempt.
+showed spin at zero throttle. Investigation revealed that the ESCs were still on
+the BLHeli_S stock PPM throttle values, which do not match the FS-i6X output.
 
-**Incorrect learned values:** Min 1148µs / Center 1488µs / Max 1832µs  
+**Stock values:** Min 1148µs / Center 1488µs / Max 1832µs  
 **Correct values for FS-i6X output:** Min 1000µs / Center 1500µs / Max 2000µs
 
 The correct values were entered manually in BLHeliSuite. With an accurate center

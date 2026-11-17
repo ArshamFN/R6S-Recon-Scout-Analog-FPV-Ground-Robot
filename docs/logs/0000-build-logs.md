@@ -127,8 +127,8 @@ checkbox greyed out, likely because of bidirectional mode; compile-from-source b
 Keil 8051 free tier 2KB code limit. Fix applied by patching the EEPROM section of
 the stock hex file directly — PPM endpoints and motor direction locked at the
 correct values. Two patched hex files produced and flashed. Post-flash startup
-power tuned to 11 (1.00) via BLHeliSuite Write Setup. ESCs appeared to be
-running in sync on the bench; full drive test deferred.
+power tuned to 11 (1.00) via BLHeliSuite Write Setup. On the bench the motors
+started at closer, but not identical, stick positions; full drive test deferred.
 
 **→ [Full session log](2026-03-28-session-006-wheel-redesign-and-ESC-firmware-patch.md)**
 
