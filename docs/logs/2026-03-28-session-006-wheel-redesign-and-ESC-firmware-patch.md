@@ -27,7 +27,7 @@ power cycle.
    motor direction
 8. Two patched hex files produced and flashed via BLHeliSuite
 9. Post-flash startup power tuned — settled at value 11 (1.00)
-10. ESCs verified in sync; full drive test deferred
+10. ESCs appeared to be running in sync on the bench; full drive test deferred
 
 ---
 
@@ -112,26 +112,99 @@ transmitter because it boots with endpoints already set to the correct values.
 | `0x1A09` | Startup_Pwr | `0x09` (0.50) | `0x08` (0.38) | Reduced slightly — 0.50 was too aggressive on new 70mm wheels |
 | `0x1A0B` | Direction | `0x01` (Normal) | `0x03` or `0x04` | ESC1 → Bidirectional (0x03), ESC2 → Bidirectional Reversed (0x04) |
 | `0x1A19` | Min_Throttle | `0x25` (→ 1148µs) | `0x00` (→ 1000µs) | Locks min endpoint to match FS-i6X actual output |
-| `0x1A1A` | Max_Throttle | `0xD0` (→ 1832µs) | `0xFF` (→ 2020µs) | Set to maximum storable byte value — FS-i6X never outputs above 2000µs so the extra headroom is inert |
+| `0x1A1A` | Max_Throttle | `0xD0` (→ 1832µs) | `0xFF` (→ 2020µs) | Maximum storable byte value. The FS-i6X tops out at 2000µs, so full forward stick gives roughly 96% forward throttle; full reverse is unaffected |
 | `0x1A21` | Center_Throttle | `0x7A` (→ 1488µs) | `0x7D` (→ 1500µs) | Locks center point to true neutral |
 
 The formula for converting the stored byte to microseconds is `4x + 1000 = µs`.
+
+**Startup_Pwr:** the "too aggressive" startup was seen at the Session 005 setting
+of 1.50, not at the stock 0.50. The flashed `0x08` (0.38) did not last: after
+flashing, Startup Power was raised in steps and settled at 11 (1.00) via Write
+Setup (see Post-Flash Startup Power Tuning), which overwrites this byte.
 
 After patching each byte, the Intel HEX line checksum was recalculated and updated
 to ensure the file is valid. BLHeliSuite validates checksums on read — an
 incorrect checksum causes a read failure.
 
+### How the Addresses Were Located
+
+The stock hex file and a description of the problem were given to an AI assistant
+(Claude), which identified the five bytes to patch and generated the two patched
+files.
+
+The addresses were later cross-checked against the BLHeli_S 16.7 source
+([bitdump/BLHeli](https://github.com/bitdump/BLHeli), `BLHeli_S SiLabs/BLHeli_S.asm`).
+The settings block starts at `CSEG AT 1A00h`, with one byte per setting at a fixed
+offset:
+
+| Address | Source label |
+|---------|--------------|
+| `0x1A09` | `Eep_Pgm_Startup_Pwr` |
+| `0x1A0B` | `Eep_Pgm_Direction` |
+| `0x1A19` | `Eep_Pgm_Min_Throttle` |
+| `0x1A1A` | `Eep_Pgm_Max_Throttle` |
+| `0x1A21` | `Eep_Pgm_Center_Throttle` |
+
+All five offsets match, and the stock bytes in `A_H_25_REV16_7.HEX` match the
+`DEFAULT_PGM_*` values in the source. In the hex file these bytes sit in three
+records, starting at `0x19FD`, `0x1A0D` and `0x1A1D`. Those are the only records
+the patch changes.
+
+### Checksum Recalculation
+
+Each Intel HEX record ends with a checksum byte: the two's complement of the low
+byte of the sum of every byte before it (byte count, address, record type and
+data). A valid record therefore sums to `0x00`, and changing any data byte means
+recomputing that record's checksum.
+
+Worked example: the Center_Throttle record, line 345 of the stock
+`A_H_25_REV16_7.HEX` from bitdump/BLHeli.
+
+```
+Stock:   :0D1A1D0004FF02FF7AFF0701FFFF0000FF3A
+Patched: :0D1A1D0004FF02FF7DFF0701FFFF0000FF37
+```
+
+- `0D` = 13 data bytes, `1A1D` = start address, `00` = data record
+- Center_Throttle (`0x1A21`) is the fifth data byte: `7A` becomes `7D`
+- Sum of every byte before the checksum in the patched record:
+  `0D+1A+1D+00+04+FF+02+FF+7D+FF+07+01+FF+FF+00+00+FF = 0x6C9`
+- Low byte is `0xC9`, so the checksum is `0x100 - 0xC9 = 0x37`
+
+The data byte went up by 3, so the checksum went down by 3 (`3A` to `37`). The
+other two changed records follow the same rule. The checksums in the flashed files
+were computed when the AI assistant generated them; this example recomputes one
+independently from the stock file.
+
 ### Output Files
 
 Two separate hex files were produced — one per ESC, differing only in the
 Direction byte. Both are tuned for use with the FlySky FS-i6X transmitter and
-FS-iA6B receiver (AFHDS 2A, PPM output).
+FS-iA6B receiver (AFHDS 2A, PWM output).
 
 - `A_H_25_REV16_7_ESC1_BIDIR.HEX` — Direction: `0x03` (Bidirectional)
 - `A_H_25_REV16_7_ESC2_BIDIR_REV.HEX` — Direction: `0x04` (Bidirectional Reversed)
 
 Both files were verified with correct checksums and confirmed readable in
 BLHeliSuite before flashing.
+
+### Regenerating the Patched Files
+
+[`tools/patch_blheli_hex.py`](../../tools/patch_blheli_hex.py) rebuilds both files
+from the stock hex. Download `A_H_25_REV16_7.HEX` from
+[bitdump/BLHeli](https://github.com/bitdump/BLHeli) (`BLHeli_S SiLabs/Hex files/`),
+then run:
+
+```
+python tools/patch_blheli_hex.py path/to/A_H_25_REV16_7.HEX -o output/folder
+```
+
+The script refuses any file that is not the stock 16.7 A_H_25 hex, patches the
+five bytes in the table above, recalculates the checksums of the three changed
+records, validates every record in the output, and writes both ESC files. Its
+output matches the two originally flashed files byte for byte.
+[`tools/test_patch_blheli_hex.py`](../../tools/test_patch_blheli_hex.py) checks
+this independently; usage is in its header.
 
 ---
 
@@ -149,6 +222,9 @@ PB3PB4 firmware as the 4-way interface:
    values
 
 Both ESCs flashed and verified successfully.
+
+![ESC board](../../images/session-006/esc-board.jpg)
+ESC board: HSKRC OPTIO 20A, BLHeli_S A-H-25
 
 ---
 
@@ -178,6 +254,9 @@ available session.
 ## Next Steps
 
 - [ ] Full drive test with patched firmware and 70mm wheels
+- [ ] Measure ESC sync with a straight-line drift test: hold a fixed stick
+      position over a measured distance, record sideways drift, and repeat in
+      both directions
 - [ ] Battery compartment redesign — current design requires full rear stem
       disassembly to access batteries, impractical given ~10-minute runtime
 - [ ] Verify requirements: drop test, runtime, splash resistance

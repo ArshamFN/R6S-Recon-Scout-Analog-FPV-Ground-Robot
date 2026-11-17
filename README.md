@@ -2,10 +2,15 @@
 
 A miniature differential-drive ground robot inspired by the Recon Scout from Rainbow Six Siege, built around analog 5.8GHz FPV drone components for low-latency video and long-range RC control.
 
-![Project Status](https://img.shields.io/badge/status-in%20progress-yellow)
+![Project Status](https://img.shields.io/badge/status-frozen-lightgrey)
 ![Platform](https://img.shields.io/badge/platform-FlySky%20FS--i6X-blue)
 ![Video](https://img.shields.io/badge/video-5.8GHz%20Analog%20FPV-orange)
 ![License](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)
+
+**ESC firmware patch** ([Session 006 log](docs/logs/2026-03-28-session-006-wheel-redesign-and-ESC-firmware-patch.md))
+- **Problem:** the two BLHeli_S ESCs engaged at different stick positions.
+- **Fix:** the settings bytes (throttle range, center, direction, startup power) were patched directly in the stock Intel HEX file, record checksums recalculated, and one file flashed per ESC.
+- **Result:** the ESCs appeared to run in sync on the bench; sync has not been measured yet.
 
 ## Project Overview
 
@@ -46,7 +51,7 @@ A miniature differential-drive ground robot inspired by the Recon Scout from Rai
 | **Motor KV** | 920KV |
 | **Battery** | 2× 2S 800mAh 50C in parallel — 7.4V nominal, 1600mAh, JST |
 | **Est. Runtime** | ~10–12 min at normal driving loads |
-| **ESC Signal Protocol** | PWM (BLHeli_S bidirectional mode) |
+| **ESC Signal Protocol** | PWM, 1000 to 2000µs (BLHeli_S bidirectional mode; BLHeliSuite names its throttle range settings "PPM") |
 | **RC Protocol** | AFHDS 2A (2.4GHz) |
 | **Video Protocol** | Analog 5.8GHz, 40 channels, up to 200mW |
 | **Video Latency** | <30ms (analog) |
@@ -85,7 +90,9 @@ All inter-piece joints use **M3×6×5 brass heat set inserts**: 4.2mm hole diame
 
 ## Current Status
 
-**Last Updated:** March 27, 2026
+**Last Updated:** November 16, 2026
+
+**Status:** Frozen to focus on a separate rover project; no build sessions since Session 006 (2026-03-28). The robot drives under power but is not controllable: the wheels lose traction as soon as they turn, and top speed is too high.
 
 ### Completed Milestones
 
@@ -106,6 +113,8 @@ All inter-piece joints use **M3×6×5 brass heat set inserts**: 4.2mm hole diame
 - ✅ ESC PWM calibration complete (Min 1000µs, Center 1500µs, Max 2000µs)
 - ✅ ESC startup tuning complete — Low RPM Power Protect off, Startup Power high, Demag Compensation low, Motor Timing high
 - ✅ Full wiring completed
+- ✅ Motor response inconsistency addressed in Session 006: ESC firmware patched at the hex level, one file per ESC; ESCs appeared in sync on the bench (not yet measured)
+- ✅ Startup Power retuned to 11 (1.00) after flashing (Session 006)
 
 **Mechanical:**
 - ✅ Body v1 printed in PLA — motor fitment confirmed
@@ -114,6 +123,7 @@ All inter-piece joints use **M3×6×5 brass heat set inserts**: 4.2mm hole diame
 - ✅ Body, body cap, and battery cover printed in PETG
 - ✅ Wheels and rear stem printed in TPU
 - ✅ Full assembly completed
+- ✅ Wheel redesign completed in Session 006: 70mm diameter, 2mm spike tread, reprinted in TPU
 
 **Testing:**
 - ✅ First wheel prototype printed (PLA — geometry check)
@@ -121,8 +131,10 @@ All inter-piece joints use **M3×6×5 brass heat set inserts**: 4.2mm hole diame
 - ✅ Second drive test completed — robot moves under power
 
 **Pending:**
-- ⏳ Wheel redesign — smaller diameter, wider contact patch, better traction geometry
-- ⏳ Motor response inconsistency investigation
+- ⏳ Traction: the 70mm wheels still slip as soon as they turn
+- ⏳ Top speed too high to control
+- ⏳ ESC sync measurement (straight-line drift test); blocked until traction is fixed, since slipping wheels hide any ESC mismatch
+- ⏳ Battery compartment redesign: batteries currently need full rear stem disassembly to reach
 - ⏳ Wheel material testing (TPU baseline complete — further iterations pending)
 - ⏳ Requirements verification (drop, runtime, splash resistance)
 
