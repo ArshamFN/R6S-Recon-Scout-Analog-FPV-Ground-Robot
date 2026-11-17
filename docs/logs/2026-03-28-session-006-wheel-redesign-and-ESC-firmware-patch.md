@@ -8,8 +8,8 @@
 ## Goal
 
 Resolve the two issues identified in Session 005: near-zero traction from the
-original 90mm wheels, and ESC desync caused by PPM endpoint relearning on every
-power cycle.
+original 90mm wheels, and ESC desync (the two motors starting at different stick
+positions).
 
 ---
 
@@ -17,9 +17,8 @@ power cycle.
 
 1. Wheels redesigned — simpler geometry, 70mm diameter, 2mm spike tread pattern
 2. New wheels printed in TPU and installed
-3. Root cause of ESC desync confirmed — BLHeli_S PPM relearn behavior on power-up
+3. ESC desync attributed to PPM endpoint relearning on power-up (corrected below)
 4. BLHeliSuite "Programming by TX" fix attempted — setting greyed out, non-editable
-   in this firmware revision
 5. Compile-from-source approach attempted — blocked by Keil 8051 free tier 2KB
    code size limit
 6. Toolchain established: Simplicity Studio v4 + Keil 8051 9.60
@@ -55,15 +54,42 @@ After: 70MM Wheel
 
 ---
 
-## ESC Desync — Root Cause
+## ESC Desync: Corrected Finding
 
-The motor speed inconsistency observed in Session 005 was caused by BLHeli_S
-relearning PPM throttle endpoints on every power cycle. The firmware's default
-behavior is to recalibrate min/max throttle from the incoming signal during the
-arming sequence each time the ESC is powered up. Because the FS-i6X's actual
-output range does not precisely match the BLHeli_S default reference range,
-the two ESCs learn slightly different endpoint values on each power cycle —
-causing them to disagree on what a given throttle input means.
+**Original hypothesis.** The two motors started at different stick positions. A
+BLHeliSuite read in Session 005 showed PPM values of 1148/1488/1832µs, which were
+taken to be values the ESCs had learned. The working theory became that BLHeli_S
+relearned its PPM throttle endpoints on every power cycle, so the two ESCs ended
+up with different values.
+
+**What the source shows.** The BLHeli_S 16.7 source
+([`BLHeli_S.asm`](https://github.com/bitdump/BLHeli/blob/a5bcf99312e2c7c9e79ccd8051e4633f954f8a1a/BLHeli_S%20SiLabs/BLHeli_S.asm))
+does not support that theory:
+
+- In bidirectional mode, the arming code skips TX programming and throttle
+  calibration entirely
+  ([lines 3796 to 3800](https://github.com/bitdump/BLHeli/blob/a5bcf99312e2c7c9e79ccd8051e4633f954f8a1a/BLHeli_S%20SiLabs/BLHeli_S.asm#L3796-L3800)).
+- In normal mode, calibration only runs on the first arming after power-up, with
+  TX programming enabled and the stick above mid (lines 3803 to 3836).
+- 1148/1488/1832µs are the stock `DEFAULT_PGM_MIN_THROTTLE`,
+  `DEFAULT_PGM_CENTER_THROTTLE` and `DEFAULT_PGM_MAX_THROTTLE` values
+  ([lines 324 to 326](https://github.com/bitdump/BLHeli/blob/a5bcf99312e2c7c9e79ccd8051e4633f954f8a1a/BLHeli_S%20SiLabs/BLHeli_S.asm#L324-L326)),
+  not learned values.
+
+With both ESCs set to bidirectional (Session 003), the firmware never runs the
+calibration routine, so it could not relearn endpoints at power-up.
+
+**Most likely cause (not confirmed).** The two ESCs were running different stored
+settings. For example, if the manual 1000/1500/2000µs values from Session 005 did
+not end up saved on both ESCs, one would still use the stock 1148/1488/1832µs
+range and start at a different stick position. Whether those values were saved
+and read back from both ESCs was not recorded.
+
+**Why the patch still helped.** Flashing the patched hex wrote the same settings
+page to both ESCs (only the Direction byte differs) and did not change any
+firmware code, so both ESCs started from identical throttle settings. After
+flashing, the motors started at closer, but not identical, stick positions. The
+remaining difference has not been investigated.
 
 ---
 
@@ -73,9 +99,10 @@ causing them to disagree on what a given throttle input means.
 
 In BLHeliSuite, the "Programming by TX" setting controls whether the ESC accepts
 throttle calibration from the transmitter signal. Disabling it would lock the
-stored PPM values permanently. However, in firmware revision A_H_25_REV16_7, this
-checkbox is greyed out and cannot be changed via BLHeliSuite. This approach was
-abandoned.
+stored PPM values permanently. However, this checkbox was greyed out and could not
+be changed via BLHeliSuite. The likely reason is bidirectional mode: the BLHeli_S
+16.7 source skips TX programming entirely when Direction is bidirectional (see
+Corrected Finding above). This approach was abandoned.
 
 **Attempt 2 — Compile from source**
 
@@ -99,11 +126,12 @@ single firmware patch is not justified. Compile-from-source was abandoned.
 Since compiling from source was blocked, the pre-built stock hex file
 (`A_H_25_REV16_7.HEX`) was patched directly at the EEPROM segment addresses.
 
-BLHeli_S stores its default configuration values in a dedicated EEPROM section
-of the hex file. These values are loaded on first boot and after any settings
-reset. By patching the correct bytes in the hex file before flashing, the desired
-default values are baked in permanently — the ESC will never relearn from the
-transmitter because it boots with endpoints already set to the correct values.
+BLHeli_S keeps its settings in a flash page at `0x1A00` (the "EEPROM" segment),
+which the firmware reads on every boot. Patching those bytes in the hex file sets
+the values both ESCs start with after flashing. BLHeliSuite's Write Setup writes to
+the same page, so later changes (such as the startup power tuning below) replace
+the patched bytes. If the page is ever invalid, the firmware rewrites it from its
+compiled-in defaults, not the patched values.
 
 ### EEPROM Byte Patch Table
 
@@ -222,9 +250,6 @@ PB3PB4 firmware as the 4-way interface:
    values
 
 Both ESCs flashed and verified successfully.
-
-![ESC board](../../images/session-006/esc-board.jpg)
-ESC board: HSKRC OPTIO 20A, BLHeli_S A-H-25
 
 ---
 

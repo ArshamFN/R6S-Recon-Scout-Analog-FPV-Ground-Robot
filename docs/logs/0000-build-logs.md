@@ -117,12 +117,13 @@ near-zero traction, and inconsistent motor behaviour.
 ## Session 006 — 2026-03-28: Wheel Redesign & ESC Firmware Patch
 
 **Goal:** Resolve near-zero traction from the original 90mm wheels and ESC desync
-caused by PPM endpoint relearning on every power cycle.
+(the two motors starting at different stick positions).
 
 **Summary:** Wheels redesigned to 70mm diameter with a 2mm spike tread pattern
-and reprinted in TPU — traction improved significantly. ESC desync root-caused as
-BLHeli_S PPM relearn behavior on power-up. BLHeliSuite "Programming by TX"
-checkbox greyed out in this firmware revision; compile-from-source blocked by
+and reprinted in TPU — traction improved significantly. ESC desync was first
+attributed to PPM endpoint relearning; the BLHeli_S source shows the firmware
+cannot relearn in bidirectional mode (see log). BLHeliSuite "Programming by TX"
+checkbox greyed out, likely because of bidirectional mode; compile-from-source blocked by
 Keil 8051 free tier 2KB code limit. Fix applied by patching the EEPROM section of
 the stock hex file directly — PPM endpoints and motor direction locked at the
 correct values. Two patched hex files produced and flashed. Post-flash startup
